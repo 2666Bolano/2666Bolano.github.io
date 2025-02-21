@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>少数民族总览 - 中国之韵</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="../style.css">
+</head>
+<body class="d-flex flex-column min-vh-100">
+  <!-- 导航栏（高亮少数民族） -->
+  <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+    <div class="container">
+      <a class="navbar-brand" href="../index.html">中国之韵</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item">
+            <a class="nav-link" href="../index.html">首页</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link active" href="list.html">少数民族</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="../about.html">关于</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="../contact.html">联系</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- 民族卡片网格 -->
+  <main class="container mt-4 mb-4">
+    <h1 class="mb-4">中华少数民族文化</h1>
+    <div class="row row-cols-1 row-cols-md-3 g-4">
+      <!-- 示例民族卡片：苗族 -->
+      <div class="col">
+        <div class="card h-100 shadow">
+          <img src="../images/miao.jpg" class="card-img-top" alt="苗族服饰">
+          <div class="card-body">
+            <h3 class="card-title">苗族</h3>
+            <p class="card-text">苗族银饰工艺享誉世界...</p>
+            <a href="miao.html" class="btn btn-primary stretched-link">查看详情</a>
+          </div>
+        </div>
+      </div>
+      
+      <!-- 视频卡片 -->
+      <div class="col">
+        <div class="card h-100 shadow">
+          <!-- 显示视频封面图片 -->
+          <img src="../images/video_cover.jpg" class="card-img-top" alt="苗族文化视频封面">
+          <div class="card-body">
+            <h3 class="card-title">苗族文化视频</h3>
+            <p class="card-text">点击下方按钮观看苗族文化视频。</p>
+            <!-- 按钮触发模态框 -->
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#videoModal">
+              播放视频
+            </button>
+          </div>
+        </div>
+      </div>
+      
+      <!-- 可添加更多民族卡片 -->
+    </div>
+  </main>
+
+  <!-- 视频播放模态框 -->
+  <div class="modal fade" id="videoModal" tabindex="-1" aria-labelledby="videoModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="videoModalLabel">苗族文化视频</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="关闭"></button>
+        </div>
+        <div class="modal-body">
+          <!-- 使用响应式16:9容器包装视频 -->
+          <div class="ratio ratio-16x9">
+            <video id="modalVideo" controls poster="../images/video_cover.jpg">
+              <source src="../videos/miao-culture.mp4" type="video/mp4">
+              您的浏览器不支持HTML5视频。
+            </video>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 页脚 -->
+  <footer class="mt-auto bg-light">
+    <div class="container text-center py-3">
+      <p class="mb-0">© 2025 中国之韵. 保留所有权利。</p>
+    </div>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    // 模态框关闭时暂停并重置视频播放
+    var videoModal = document.getElementById('videoModal');
+    videoModal.addEventListener('hidden.bs.modal', function () {
+      var video = document.getElementById('modalVideo');
+      video.pause();
+      video.currentTime = 0;
+    });
+  </script>
+</body>
+</html>

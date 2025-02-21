@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>中国之韵 - 首页</title>
+  <meta name="description" content="中国之韵——宣传中华少数民族的高级设计网页，展示文章、图片、视频及音乐。">
+  <!-- 引入 Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;700&family=Ma+Shan+Zheng&display=swap" rel="stylesheet">
+  <!-- 加载 Bootstrap 与自定义样式 -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <!-- 加载 Bootstrap Icons -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+  <style>
+    /* 全局字体设置：正文采用 Noto Sans SC，标题采用 Ma Shan Zheng */
+    body {
+      font-family: 'Noto Sans SC', sans-serif;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      font-family: 'Ma Shan Zheng', cursive;
+    }
+    .gold-text {
+      color: #FFD700;
+      font-family: 'Ma Shan Zheng', cursive;
+    }
+    
+    /* 中国风背景视差区块 */
+    #chinese-bg {
+      position: relative;
+      height: 100vh;
+      min-height: 500px;
+      overflow: hidden;
+      margin-top: 76px; /* 与固定导航栏高度匹配 */
+    }
+    .parallax-bg {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 120%;
+      background: url('images/chinese-bg.jpg') center center fixed no-repeat;
+      background-size: cover;
+      filter: brightness(0.8);
+      z-index: -2;
+    }
+    /* 粒子效果画布 */
+    #particle-canvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: -1;
+    }
+    .parallax-content {
+      position: relative;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+      z-index: 1;
+    }
+    .parallax-text {
+      text-align: center;
+      max-width: 800px;
+      padding: 20px;
+    }
+    .parallax-text h2 {
+      font-size: 3.5rem;
+      margin-bottom: 1rem;
+    }
+    .parallax-text p {
+      font-size: 1.5rem;
+      line-height: 2rem;
+    }
+    /* 左右滑入图片效果 */
+    .reveal-image {
+      position: absolute;
+      bottom: 0.1%;
+      width: 40%;
+      max-width: 500px;
+      transition: all 1s cubic-bezier(0.25, 0.1, 0.25, 1);
+      opacity: 0;
+    }
+    .reveal-image img {
+      border: none;
+    }
+    .left-image {
+      left: 69%;
+      transform: translateX(-150%);
+    }
+    .right-image {
+      right: 69%;
+      transform: translateX(150%);
+    }
+    .reveal-image.active {
+      opacity: 1;
+      transform: translateX(0);
+    }
+    @media (max-width: 768px) {
+      #chinese-bg {
+        height: 60vh;
+      }
+      .parallax-text h2 {
+        font-size: 2.5rem;
+      }
+      .parallax-text p {
+        font-size: 1.2rem;
+      }
+      .reveal-image {
+        width: 45%;
+      }
+    }
+    /* 音乐播放器样式 */
+    #music-player {
+      position: relative;
+      width: 80%;
+      max-width: 800px;
+      height: 150px;
+      background: url('images/music-bg.jpg') center center no-repeat;
+      background-size: cover;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 30px auto;
+      overflow: hidden;
+      border-radius: 15px;
+      transition: transform 0.2s ease;
+    }
+    #music-player:active {
+      transform: scale(0.98);
+    }
+    #music-player .mp-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.4);
+      z-index: 1;
+    }
+    #music-player .mp-btn {
+      position: relative;
+      z-index: 2;
+      background: rgba(255,255,255,0.8);
+      border: none;
+      border-radius: 50%;
+      width: 60px;
+      height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2rem;
+      color: #333;
+      cursor: pointer;
+      transition: transform 0.3s ease;
+    }
+    #music-player .mp-btn:hover {
+      transform: scale(1.1);
+    }
+    #music-player .mp-timeline {
+      position: absolute;
+      bottom: 20px;
+      left: 10%;
+      width: 80%;
+      height: 10px;
+      background: rgba(255, 255, 255, 0.6);
+      border-radius: 5px;
+      overflow: hidden;
+      z-index: 2;
+      cursor: pointer;
+    }
+    #music-player .mp-progress {
+      height: 100%;
+      width: 0%;
+      background: #FFD700;
+      border-radius: 5px;
+    }
+  </style>
+</head>
+<body>
+  <!-- 导航栏 -->
+  <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
+    <div class="container">
+      <a class="navbar-brand" href="index.html">中国之韵</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item"><a class="nav-link active" href="index.html">首页</a></li>
+          <li class="nav-item"><a class="nav-link" href="minorities/list.html">少数民族</a></li>
+          <li class="nav-item"><a class="nav-link" href="articles/article-template.html">文章</a></li>
+          <li class="nav-item"><a class="nav-link" href="about.html">关于</a></li>
+          <li class="nav-item"><a class="nav-link" href="contact.html">联系</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+  
+  <!-- 中国风背景视差区块 -->
+  <section id="chinese-bg">
+    <div class="parallax-bg"></div>
+    <!-- 粒子效果画布 -->
+    <canvas id="particle-canvas"></canvas>
+    <div class="container">
+      <div class="parallax-content">
+        <div class="parallax-text">
+          <h2 class="gold-text">中华民族多元一体</h2>
+          <p>五十六个民族共同谱写的华彩乐章</p>
+          <p>传承千年文明，展现时代风采</p>
+        </div>
+      </div>
+    </div>
+    <!-- 左右滑入图片 -->
+    <div class="reveal-image left-image">
+      <img src="images/cultural1.png" alt="传统元素1" class="img-fluid">
+    </div>
+    <div class="reveal-image right-image">
+      <img src="images/cultural2.png" alt="传统元素2" class="img-fluid">
+    </div>
+  </section>
+
+  <!-- 轮播图区块 -->
+  <div id="mainCarousel" class="carousel slide" data-bs-ride="carousel">
+    <div class="carousel-inner">
+      <!-- 第一幅图 -->
+      <div class="carousel-item active">
+        <img src="images/slide1.jpg" class="d-block w-100" alt="民族盛装">
+        <div class="carousel-caption d-none d-md-block">
+          <h3 class="gold-text">缤纷盛装，绽放中华风采</h3>
+          <p>五十六民族各具风情的服饰，传统与时尚完美融合。</p>
+        </div>
+      </div>
+      <!-- 第二幅图 -->
+      <div class="carousel-item">
+        <img src="images/slide2.jpg" class="d-block w-100" alt="古韵建筑">
+        <div class="carousel-caption d-none d-md-block">
+          <h3 class="gold-text">古韵风情，匠心独运</h3>
+          <p>吊脚楼、蒙古包、藏式寺庙——传统建筑展现历史积淀。</p>
+        </div>
+      </div>
+      <!-- 第三幅图：彝族火把节 -->
+      <div class="carousel-item">
+        <img src="images/slide3.jpg" class="d-block w-100" alt="彝族火把节">
+        <div class="carousel-caption d-none d-md-block">
+          <h3 class="gold-text">彝族火把，燃情岁月</h3>
+          <p>热情洋溢的彝族火把节，点燃古老传统的激情与希望。</p>
+        </div>
+      </div>
+      <!-- 第四幅图：苗绣艺术 -->
+      <div class="carousel-item">
+        <img src="images/slide4.jpg" class="d-block w-100" alt="苗绣艺术">
+        <div class="carousel-caption d-none d-md-block">
+          <h3 class="gold-text">苗绣风华，匠心独具</h3>
+          <p>精湛的苗族刺绣艺术，将传统技艺与自然美景完美融合，传递世代智慧。</p>
+        </div>
+      </div>
+      <!-- 第五幅图 -->
+      <div class="carousel-item">
+        <img src="images/slide5.jpg" class="d-block w-100" alt="山水文化">
+        <div class="carousel-caption d-none d-md-block">
+          <h3 class="gold-text">山水相依，文化交融</h3>
+          <p>壮丽山水与悠久文化交织，共谱中华大地的独特韵味。</p>
+        </div>
+      </div>
+    </div>
+    <button class="carousel-control-prev" type="button" data-bs-target="#mainCarousel" data-bs-slide="prev">
+      <span class="carousel-control-prev-icon"></span>
+    </button>
+    <button class="carousel-control-next" type="button" data-bs-target="#mainCarousel" data-bs-slide="next">
+      <span class="carousel-control-next-icon"></span>
+    </button>
+  </div>
+
+  <!-- 播放音乐区块 -->
+  <section id="music-player" class="text-center">
+    <div class="mp-overlay"></div>
+    <button id="musicBtn" class="mp-btn">
+      <i class="bi bi-play-fill"></i>
+    </button>
+    <div class="mp-timeline">
+      <div class="mp-progress"></div>
+    </div>
+    <audio id="bgMusic" loop>
+      <source src="music/ethnic-music.mp3" type="audio/mpeg">
+      您的浏览器不支持音频播放。
+    </audio>
+  </section>
+
+  <!-- 主体内容 -->
+  <main class="container mt-4">
+    <!-- 欢迎与引导部分 -->
+    <section class="mb-5 text-center">
+      <h2 class="display-4 gold-text">探索中华少数民族之美</h2>
+      <p class="lead text-muted">五十六个民族，五十六朵花</p>
+      <a href="articles/article-template.html" class="btn btn-primary btn-lg">查看示例文章 →</a>
+    </section>
+
+    <!-- 最新文章部分 -->
+    <section class="mb-5">
+      <h2 class="mb-4 text-center gold-text">最新文章</h2>
+      <div class="container">
+        <!-- 第一篇文章：左图右文 -->
+        <a href="articles/zhuang-traditional-festival.html" class="text-decoration-none text-dark">
+          <div class="row align-items-center mb-4">
+            <div class="col-md-6">
+              <img src="images/article1.jpg" class="img-fluid rounded" alt="壮族传统节日">
+            </div>
+            <div class="col-md-6">
+              <h5 class="gold-text">壮族传统节日</h5>
+              <p>探索壮族的传统节庆与文化底蕴，体验浓厚的民族风情。</p>
+            </div>
+          </div>
+        </a>
+        <!-- 第二篇文章：右图左文 -->
+        <a href="articles/miao-silver.html" class="text-decoration-none text-dark">
+          <div class="row align-items-center mb-4">
+            <div class="col-md-6 order-md-2">
+              <img src="images/article2.jpg" class="img-fluid rounded" alt="苗族银饰之美">
+            </div>
+            <div class="col-md-6 order-md-1">
+              <h5 class="gold-text">苗族银饰之美</h5>
+              <p>苗族银饰，不仅是一种装饰，更是一种文化传承的象征。</p>
+            </div>
+          </div>
+        </a>
+        <!-- 第三篇文章：左图右文 -->
+        <a href="articles/tangka-art.html" class="text-decoration-none text-dark">
+          <div class="row align-items-center mb-4">
+            <div class="col-md-6">
+              <img src="images/article3.jpg" class="img-fluid rounded" alt="藏族唐卡艺术">
+            </div>
+            <div class="col-md-6">
+              <h5 class="gold-text">藏族唐卡艺术</h5>
+              <p>探秘西藏唐卡的历史与神秘艺术，感受藏族文化的独特魅力。</p>
+            </div>
+          </div>
+        </a>
+        <!-- 第四篇文章：右图左文 -->
+        <a href="articles/hui-traditional-food.html" class="text-decoration-none text-dark">
+          <div class="row align-items-center mb-4">
+            <div class="col-md-6 order-md-2">
+              <img src="images/article4.jpg" class="img-fluid rounded" alt="回族传统美食">
+            </div>
+            <div class="col-md-6 order-md-1">
+              <h5 class="gold-text">回族传统美食</h5>
+              <p>品味回族丰富多样的传统美食，感受历史沉淀下的风味传承。</p>
+            </div>
+          </div>
+        </a>
+        <!-- 第五篇文章：左图右文 -->
+        <a href="articles/mongolian-culture.html" class="text-decoration-none text-dark">
+          <div class="row align-items-center mb-4">
+            <div class="col-md-6">
+              <img src="images/article5.jpg" class="img-fluid rounded" alt="蒙古族草原风情">
+            </div>
+            <div class="col-md-6">
+              <h5 class="gold-text">蒙古族草原风情</h5>
+              <p>体验蒙古族草原的辽阔与豪迈，领略游牧文化的独特韵味。</p>
+            </div>
+          </div>
+        </a>
+        <!-- 第六篇文章：右图左文 -->
+        <a href="articles/uyghur-cultural-festival.html" class="text-decoration-none text-dark">
+          <div class="row align-items-center mb-4">
+            <div class="col-md-6 order-md-2">
+              <img src="images/article6.jpg" class="img-fluid rounded" alt="维吾尔文化盛宴">
+            </div>
+            <div class="col-md-6 order-md-1">
+              <h5 class="gold-text">维吾尔文化盛宴</h5>
+              <p>领略维吾尔族的独特艺术魅力，感受传统与现代的完美融合。</p>
+            </div>
+          </div>
+        </a>
+      </div>
+    </section>
+
+    <!-- 精彩视频部分 -->
+    <section class="mb-5 text-center">
+      <h2 class="mb-4 gold-text">精彩视频</h2>
+      <video controls class="img-fluid mb-3" style="max-width: 100%; border-radius: 8px;">
+        <source src="videos/ethnic-culture.mp4" type="video/mp4">
+        您的浏览器不支持视频播放。
+      </video>
+      <p class="text-muted">观看更多精彩视频，感受中华少数民族文化的魅力。</p>
+    </section>
+
+    <!-- 更多资讯 -->
+    <section class="text-center mb-5">
+      <a href="articles/article-template.html" class="btn btn-lg btn-primary">查看更多文章 →</a>
+    </section>
+  </main>
+
+  <!-- 页脚 -->
+  <footer class="mt-auto">
+    <div class="container text-center py-3">
+      <p class="mb-0">© 2025 中国之韵. 保留所有权利。</p>
+    </div>
+  </footer>
+
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  
+  <!-- 视差效果及滑入图片交互脚本 -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // 观察左右滑入图片，触发 active 类
+      const images = document.querySelectorAll('.reveal-image');
+      const observerOptions = { threshold: 0.1 };
+      const observer = new IntersectionObserver((entries, obs) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('active');
+            obs.unobserve(entry.target);
+          }
+        });
+      }, observerOptions);
+      images.forEach(img => observer.observe(img));
+
+      // 视差背景动态效果
+      window.addEventListener('scroll', () => {
+        const parallaxBg = document.querySelector('.parallax-bg');
+        const scrolled = window.pageYOffset;
+        parallaxBg.style.transform = `translateY(${scrolled * 0.5}px)`;
+      });
+    });
+  </script>
+  
+  <!-- 音乐播放及时间轴控制脚本 -->
+  <script>
+    const musicBtn = document.getElementById('musicBtn');
+    const bgMusic = document.getElementById('bgMusic');
+    const progress = document.querySelector('.mp-progress');
+    const timeline = document.querySelector('.mp-timeline');
+    let isPlaying = false;
+    
+    musicBtn.addEventListener('click', () => {
+      if (isPlaying) {
+        bgMusic.pause();
+        musicBtn.innerHTML = '<i class="bi bi-play-fill"></i>';
+      } else {
+        bgMusic.play();
+        musicBtn.innerHTML = '<i class="bi bi-pause-fill"></i>';
+      }
+      isPlaying = !isPlaying;
+    });
+    
+    bgMusic.addEventListener('timeupdate', () => {
+      if (bgMusic.duration) {
+        const percentage = (bgMusic.currentTime / bgMusic.duration) * 100;
+        progress.style.width = percentage + '%';
+      }
+    });
+    
+    timeline.addEventListener('click', (e) => {
+      const rect = timeline.getBoundingClientRect();
+      const clickX = e.clientX - rect.left;
+      const newTime = (clickX / rect.width) * bgMusic.duration;
+      bgMusic.currentTime = newTime;
+    });
+  </script>
+  
+  <!-- 粒子效果脚本（增加 touchmove 支持） -->
+  <script>
+    (function() {
+      const canvas = document.getElementById('particle-canvas');
+      const ctx = canvas.getContext('2d');
+      let particles = [];
+      let canvasWidth, canvasHeight;
+
+      function resizeCanvas() {
+        canvasWidth = canvas.width = canvas.offsetWidth;
+        canvasHeight = canvas.height = canvas.offsetHeight;
+      }
+      window.addEventListener('resize', resizeCanvas);
+      resizeCanvas();
+
+      class Particle {
+        constructor(x, y) {
+          this.x = x;
+          this.y = y;
+          this.size = Math.random() * 3 + 1;
+          this.speedX = (Math.random() - 0.5) * 2;
+          this.speedY = (Math.random() - 0.5) * 2;
+          this.alpha = 1;
+          this.life = 60; // 60帧生命
+        }
+        update() {
+          this.x += this.speedX;
+          this.y += this.speedY;
+          this.life--;
+          this.alpha = this.life / 60;
+        }
+        draw() {
+          ctx.fillStyle = `rgba(255,255,255,${this.alpha})`;
+          ctx.beginPath();
+          ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+          ctx.fill();
+        }
+      }
+
+      function spawnParticle(x, y) {
+        particles.push(new Particle(x, y));
+      }
+
+      function animateParticles() {
+        ctx.clearRect(0, 0, canvasWidth, canvasHeight);
+        for (let i = particles.length - 1; i >= 0; i--) {
+          const p = particles[i];
+          p.update();
+          p.draw();
+          if (p.life <= 0) {
+            particles.splice(i, 1);
+          }
+        }
+        requestAnimationFrame(animateParticles);
+      }
+      animateParticles();
+
+      // 鼠标移动事件
+      const chineseBg = document.getElementById('chinese-bg');
+      chineseBg.addEventListener('mousemove', function(e) {
+        const rect = canvas.getBoundingClientRect();
+        const mouseX = e.clientX - rect.left;
+        const mouseY = e.clientY - rect.top;
+        spawnParticle(mouseX, mouseY);
+      });
+      
+      // touchmove 事件处理（移动设备支持）
+      chineseBg.addEventListener('touchmove', function(e) {
+        const rect = canvas.getBoundingClientRect();
+        const touch = e.touches[0];
+        const touchX = touch.clientX - rect.left;
+        const touchY = touch.clientY - rect.top;
+        spawnParticle(touchX, touchY);
+      });
+    })();
+  </script>
+</body>
+</html>

@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>联系我 - 我的博客</title>
+  <link rel="stylesheet" href="style.css">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css">
+</head>
+<body class="d-flex flex-column min-vh-100">
+  <!-- 导航栏 -->
+  <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+    <div class="container">
+      <a class="navbar-brand" href="index.html">我的博客</a>
+      <!-- 响应式汉堡按钮 -->
+      <button class="navbar-toggler" type="button" 
+              data-bs-toggle="collapse" 
+              data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <!-- 导航菜单 -->
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ms-auto">  <!-- ms-auto 右对齐 -->
+          <li class="nav-item">
+            <a class="nav-link" href="index.html">首页</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="about.html">关于我</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link active" href="contact.html">联系</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- 主要内容 -->
+  <main class="container my-5 flex-grow-1">
+    <!-- 联系表单卡片 -->
+    <div class="card shadow-lg mx-auto mb-5" style="max-width: 600px;">
+      <div class="card-body">
+        <h1 class="card-title text-center mb-4">联系我</h1>
+        
+        <!-- 联系方式 -->
+        <div class="alert alert-info mb-4">
+          <i class="bi bi-envelope me-2"></i> 我的邮箱：1736486240@qq.com
+        </div>
+
+        <!-- 表单：将 action 设置为 send_comment.php -->
+        <form class="needs-validation" novalidate action="send_comment.php" method="post">
+          <!-- 姓名输入 -->
+          <div class="mb-3">
+            <label for="name" class="form-label">你的名字</label>
+            <input type="text" 
+                   class="form-control" 
+                   id="name" 
+                   name="name"
+                   placeholder="请输入姓名"
+                   required>
+            <div class="invalid-feedback">请填写姓名</div>
+          </div>
+
+          <!-- 邮箱输入 -->
+          <div class="mb-3">
+            <label for="email" class="form-label">你的邮箱</label>
+            <input type="email" 
+                   class="form-control" 
+                   id="email" 
+                   name="email"
+                   placeholder="example@domain.com"
+                   required>
+            <div class="invalid-feedback">请输入有效的邮箱地址</div>
+          </div>
+
+          <!-- 留言内容 -->
+          <div class="mb-4">
+            <label for="message" class="form-label">留言内容</label>
+            <textarea class="form-control" 
+                      id="message" 
+                      name="message"
+                      rows="4" 
+                      placeholder="请输入留言内容..."
+                      required></textarea>
+            <div class="invalid-feedback">请填写留言内容</div>
+          </div>
+
+          <!-- 提交按钮 -->
+          <div class="d-grid">
+            <button type="submit" class="btn btn-primary btn-lg">
+              <i class="bi bi-send me-2"></i>发送消息
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- 用户评论展示部分（你可以手动添加审核后的评论） -->
+    <section id="user-comments" class="mb-5">
+      <h2 class="text-center mb-4">用户评论</h2>
+      <div class="list-group">
+        <!-- 此处内容需要你审核后手动添加 -->
+        <div class="list-group-item list-group-item-action flex-column align-items-start">
+          <div class="d-flex w-100 justify-content-between">
+            <h5 class="mb-1">审核后的评论示例</h5>
+            <small>2025-03-01</small>
+          </div>
+          <p class="mb-1">这里是审核通过后的评论内容，会在这里展示。</p>
+          <small>感谢留言！</small>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- 页脚 -->
+  <footer class="bg-dark text-white py-4 mt-auto">
+    <div class="container text-center">
+      <p class="mb-0">© 2025 我的博客. 保留所有权利。</p>
+    </div>
+  </footer>
+
+  <!-- Bootstrap JS + Popper -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  
+  <!-- 表单验证脚本 -->
+  <script>
+  (() => {
+    'use strict'
+    const forms = document.querySelectorAll('.needs-validation')
+    Array.from(forms).forEach(form => {
+      form.addEventListener('submit', event => {
+        if (!form.checkValidity()) {
+          event.preventDefault()
+          event.stopPropagation()
+        }
+        form.classList.add('was-validated')
+      }, false)
+    })
+  })()
+  </script>
+</body>
+</html>
